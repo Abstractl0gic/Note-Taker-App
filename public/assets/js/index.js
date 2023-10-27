@@ -3,6 +3,7 @@ let noteTitle;
 let noteText;
 let saveNoteBtn;
 let newNoteBtn;
+let clearBtn;
 let noteList;
 
 if (window.location.pathname === '/notes') {
@@ -12,7 +13,7 @@ if (window.location.pathname === '/notes') {
   saveNoteBtn = document.querySelector('.save-note');
   newNoteBtn = document.querySelector('.new-note');
   clearBtn = document.querySelector('.clear-btn');
-  noteList = document.querySelectorAll('.list-container .list-group');
+  noteList = document.getElementById('list-group'); // Update to use the correct element
 }
 
 // Show an element
@@ -78,7 +79,7 @@ const handleNoteSave = () => {
     text: noteText.value
   };
   saveNote(newNote).then(() => {
-    getAndRenderNotes();
+    getAndRenderNotes(); // Fetch and render notes after saving
     renderActiveNote();
   });
 };
@@ -96,7 +97,7 @@ const handleNoteDelete = (e) => {
   }
 
   deleteNote(noteId).then(() => {
-    getAndRenderNotes();
+    getAndRenderNotes(); // Fetch and render notes after deleting
     renderActiveNote();
   });
 };
@@ -108,7 +109,7 @@ const handleNoteView = (e) => {
   renderActiveNote();
 };
 
-// Sets the activeNote to and empty object and allows the user to enter a new note
+// Sets the activeNote to an empty object and allows the user to enter a new note
 const handleNewNoteView = (e) => {
   activeNote = {};
   show(clearBtn);
@@ -131,12 +132,12 @@ const handleRenderBtns = () => {
 const renderNoteList = async (notes) => {
   let jsonNotes = await notes.json();
   if (window.location.pathname === '/notes') {
-    noteList.forEach((el) => (el.innerHTML = ''));
+    noteList.innerHTML = ''; // Clear the existing list
   }
 
   let noteListItems = [];
 
-  // Returns HTML element with or without a delete button
+  // Returns an HTML element with or without a delete button
   const createLi = (text, delBtn = true) => {
     const liEl = document.createElement('li');
     liEl.classList.add('list-group-item');
@@ -177,7 +178,7 @@ const renderNoteList = async (notes) => {
   });
 
   if (window.location.pathname === '/notes') {
-    noteListItems.forEach((note) => noteList[0].append(note));
+    noteListItems.forEach((note) => noteList.appendChild(note));
   }
 };
 
@@ -191,4 +192,4 @@ if (window.location.pathname === '/notes') {
   noteForm.addEventListener('input', handleRenderBtns);
 }
 
-getAndRenderNotes();
+getAndRenderNotes(); // Call this function to fetch and render notes on page load
